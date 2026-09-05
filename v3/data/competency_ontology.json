@@ -1,0 +1,22 @@
+{
+  "version": "0.3",
+  "name": "KIVO Competency Ontology Prototype",
+  "classes": ["DigitalTrace", "ActivityIndicator", "KnowledgeArea", "Competency", "Role", "ProjectTask", "Outcome"],
+  "relations": ["part_of", "related_to", "prerequisite_for", "applied_in", "complements"],
+  "competencies": [
+    {"id":"AI","name":"Искусственный интеллект","areas":["AI"],"roles":["researcher","teacher","project_member"]},
+    {"id":"DATA","name":"Анализ данных","areas":["Data"],"roles":["researcher","teacher","project_member"]},
+    {"id":"EDU_AI","name":"ИИ в образовании","areas":["Education","AI"],"roles":["teacher","methodologist","project_member"]},
+    {"id":"MATH","name":"Математическое моделирование","areas":["Mathematics"],"roles":["researcher","analyst"]},
+    {"id":"ENG","name":"Инженерно-аналитические методы","areas":["Engineering"],"roles":["researcher","project_member"]},
+    {"id":"PROJECT","name":"Управление образовательными и исследовательскими проектами","areas":["Management"],"roles":["project_leader","project_member"]}
+  ],
+  "evidence_mapping": {
+    "publication_topic":"knowledge_area_and_competency",
+    "grant_project":"competency_and_role",
+    "professional_development":"competency",
+    "education":"knowledge_area",
+    "teaching_activity":"competency_and_role",
+    "project_activity":"role_and_outcome"
+  }
+}
