@@ -1,0 +1,7 @@
+[
+ {"id":"P01","role":"ученый-преподаватель","competencies":{"AI":0.82,"DATA":0.91,"EDU_AI":0.78,"MATH":0.88,"ENG":0.30,"PROJECT":0.62},"areas":["Mathematics","Data","Education"]},
+ {"id":"P02","role":"преподаватель","competencies":{"AI":0.72,"DATA":0.54,"EDU_AI":0.95,"MATH":0.45,"ENG":0.18,"PROJECT":0.74},"areas":["Education","AI"]},
+ {"id":"P03","role":"ученый","competencies":{"AI":0.46,"DATA":0.82,"EDU_AI":0.25,"MATH":0.74,"ENG":0.88,"PROJECT":0.51},"areas":["Data","Engineering","Mathematics"]},
+ {"id":"P04","role":"ученый-преподаватель","competencies":{"AI":0.88,"DATA":0.76,"EDU_AI":0.81,"MATH":0.40,"ENG":0.33,"PROJECT":0.66},"areas":["AI","Education","Data"]},
+ {"id":"P05","role":"преподаватель","competencies":{"AI":0.34,"DATA":0.61,"EDU_AI":0.69,"MATH":0.58,"ENG":0.20,"PROJECT":0.90},"areas":["Education","Management"]}
+]
