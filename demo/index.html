@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>КИВО 2026 — Цифровой навигатор</title>
+<style>
+body{font-family:Arial,sans-serif;max-width:1180px;margin:0 auto;padding:28px;background:#f5f7fa;color:#18212f}
+h1{margin-bottom:6px} .sub{color:#687386;margin-top:0}
+select,button{font-size:16px;padding:10px 12px;border-radius:8px;border:1px solid #cbd3df;background:white}
+button{cursor:pointer}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:20px 0}
+.card{background:white;border:1px solid #dfe4ec;border-radius:12px;padding:18px}
+.metric{font-size:28px;font-weight:700}.muted{color:#687386}.bar{height:9px;background:#e8edf3;border-radius:8px;overflow:hidden}.fill{height:100%;background:#4b5563}
+.people{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.person{border:1px solid #dfe4ec;border-radius:10px;padding:14px;background:#fff}.score{font-size:22px;font-weight:700}
+.tag{display:inline-block;background:#eef2f7;border-radius:14px;padding:4px 8px;margin:3px;font-size:12px}
+#profile{margin-top:18px}.logic{line-height:1.55}
+@media(max-width:800px){.grid,.people{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<h1>Цифровой навигатор потенциала образовательных организаций</h1>
+<p class="sub">Демонстратор КИВО 2026 · синтетические данные</p>
+
+<div class="card">
+<label><b>Задача проекта:</b></label>
+<select id="task"></select>
+<button onclick="build()">Построить навигацию</button>
+</div>
+
+<div class="grid">
+<div class="card"><div class="muted">Компетенции</div><div class="metric" id="competencies">—</div><div class="muted">уникальных в выборке</div></div>
+<div class="card"><div class="muted">Сотрудники</div><div class="metric" id="count">—</div><div class="muted">в синтетическом профиле</div></div>
+<div class="card"><div class="muted">Рекомендованная команда</div><div class="metric">3</div><div class="muted">наиболее релевантных профиля</div></div>
+</div>
+
+<div class="card">
+<h2>Карта компетенций</h2><div id="map"></div>
+</div>
+
+<div class="card">
+<h2>Рекомендация команды</h2>
+<div id="people" class="people"></div>
+</div>
+
+<div id="profile" class="card" style="display:none"></div>
+
+<div class="card logic">
+<h2>Логика демонстратора</h2>
+<p><b>Данные → профиль → карта → рекомендация → команда → результат.</b></p>
+<p>Рейтинг демонстрационный: учитываются совпадения компетенций и тематик выбранной задачи, а также показатель активности. В промышленной версии эти правила заменяются валидированной моделью рекомендаций и подключаются к данным организации.</p>
+</div>
+
+<script>
+const profiles = [{"id": "P01", "name": "Анна Морозова", "role": "профессор", "competencies": ["экономика", "data analytics", "финансы"], "topics": ["финтех", "экономическая политика"], "activity": 92}, {"id": "P02", "name": "Илья Петров", "role": "доцент", "competencies": ["машинное обучение", "data analytics", "программирование"], "topics": ["ИИ", "образовательная аналитика"], "activity": 88}, {"id": "P03", "name": "Мария Соколова", "role": "исследователь", "competencies": ["педагогика", "образовательный дизайн", "ИИ"], "topics": ["цифровое обучение", "ИИ в образовании"], "activity": 84}, {"id": "P04", "name": "Дмитрий Волков", "role": "профессор", "competencies": ["экономика", "управление проектами", "стратегия"], "topics": ["университетское управление", "инновации"], "activity": 79}, {"id": "P05", "name": "Елена Орлова", "role": "доцент", "competencies": ["математика", "статистика", "data analytics"], "topics": ["моделирование", "оценка эффективности"], "activity": 81}, {"id": "P06", "name": "Сергей Ким", "role": "исследователь", "competencies": ["программирование", "ИИ", "цифровые платформы"], "topics": ["EdTech", "цифровые платформы"], "activity": 86}];
+const tasks = [{"name": "ИИ в образовании", "keywords": ["ИИ", "машинное обучение", "педагогика", "образовательный дизайн", "программирование"], "topic": ["ИИ в образовании", "цифровое обучение", "образовательная аналитика"]}, {"name": "Финтех-аналитика", "keywords": ["финансы", "экономика", "data analytics", "статистика", "программирование"], "topic": ["финтех", "экономическая политика", "моделирование"]}, {"name": "Цифровая образовательная платформа", "keywords": ["цифровые платформы", "программирование", "ИИ", "педагогика", "образовательный дизайн"], "topic": ["EdTech", "цифровое обучение", "цифровые платформы"]}];
+
+const taskSel=document.getElementById('task');
+tasks.forEach((t,i)=>{let o=document.createElement('option');o.value=i;o.textContent=t.name;taskSel.appendChild(o)});
+
+function score(p,t){
+  let s=0;
+  p.competencies.forEach(x=>{if(t.keywords.includes(x))s+=3});
+  p.topics.forEach(x=>{if(t.topic.includes(x))s+=4});
+  return s + p.activity/100;
+}
+function build(){
+ const t=tasks[taskSel.value];
+ const all=[...new Set(profiles.flatMap(p=>p.competencies))];
+ document.getElementById('competencies').textContent=all.length;
+ document.getElementById('count').textContent=profiles.length;
+ const counts=Object.fromEntries(all.map(x=>[x,profiles.filter(p=>p.competencies.includes(x)).length]));
+ document.getElementById('map').innerHTML=all.sort((a,b)=>counts[b]-counts[a]).map(x=>
+   `<div style="margin:9px 0"><div><b>${x}</b> <span class="muted">(${counts[x]})</span></div>
+   <div class="bar"><div class="fill" style="width:${counts[x]/profiles.length*100}%"></div></div></div>`).join('');
+ const ranked=[...profiles].map(p=>({...p,s:score(p,t)})).sort((a,b)=>b.s-a.s).slice(0,3);
+ document.getElementById('people').innerHTML=ranked.map((p,i)=>
+ `<div class="person" onclick="showProfile('${p.id}')"><div class="muted">#${i+1} · ${p.role}</div>
+ <h3>${p.name}</h3><div class="score">${p.s.toFixed(1)} балла</div>
+ ${p.competencies.map(x=>`<span class="tag">${x}</span>`).join('')}</div>`).join('');
+}
+function showProfile(id){
+ const p=profiles.find(x=>x.id===id);
+ const el=document.getElementById('profile');el.style.display='block';
+ el.innerHTML=`<h2>Цифровой профиль: ${p.name}</h2>
+ <p><b>Роль:</b> ${p.role} · <b>Индекс активности:</b> ${p.activity}/100</p>
+ <p><b>Компетенции:</b> ${p.competencies.join(', ')}</p>
+ <p><b>Тематики:</b> ${p.topics.join(', ')}</p>`;
+ el.scrollIntoView({behavior:'smooth'});
+}
+build();
+</script>
+</body></html>
