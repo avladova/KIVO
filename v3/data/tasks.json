@@ -1,0 +1,5 @@
+[
+ {"id":"T1","name":"Проект по ИИ в образовании","requirements":{"AI":0.8,"EDU_AI":1.0,"DATA":0.6,"PROJECT":0.6}},
+ {"id":"T2","name":"Проект по анализу цифровых данных","requirements":{"DATA":1.0,"MATH":0.7,"AI":0.6,"PROJECT":0.5}},
+ {"id":"T3","name":"Инженерно-аналитический проект","requirements":{"ENG":1.0,"DATA":0.8,"MATH":0.7,"PROJECT":0.5}}
+]
