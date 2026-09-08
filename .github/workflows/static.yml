@@ -2,13 +2,13 @@ name: Deploy Demo to GitHub Pages
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   workflow_dispatch:
 
 permissions:
   contents: read
   pages: write
-  id-token: write
+    id-token: write
 
 concurrency:
   group: "pages"
@@ -30,7 +30,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './demo'   # ← Здесь указываете свою папку
+          path: './demo'   # ← ГЛАВНОЕ: указываем папку demo
       
       - name: Deploy to GitHub Pages
         id: deployment
